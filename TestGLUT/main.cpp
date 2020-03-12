@@ -4,45 +4,53 @@
 #include <GL/gl.h>
 
 static void InitScene();
+
 static void Init();
+
 static void Display();
+
 static void DrawScene();
+
 static void CreateShaderProgram();
+
 static void CompileShader(GLuint id);
+
 static void LinkProgram(GLuint id);
+
 static void Reshape(int w, int h);
+
+GLuint prog;
+GLuint vao;
 
 static const char* vsource =
   "#version 430 core\n"
-  "layout(location = 0) in vec4 inVertex;"
-  "layout(location = 1) in vec4 inColor;"
-  "out vec4 color;"
-  "void main(void)"
-  "{"
-  "color = inColor;"
-  "gl_Position = inVertex;"
+  "layout(location = 0) in vec4 inVertex;\n"
+  "layout(location = 1) in vec4 inColor;\n"
+  "out vec4 color;\n"
+  "void main(void)\n"
+  "{\n"
+  "color = inColor;\n"
+  "gl_Position = inVertex;\n"
   "}";
 
 static const char* fsource =
   "#version 430 core\n"
-  "in vec4 color;"
-  "out vec4 FragColor;"
-  "void main(void)"
-  "{"
-  "FragColor = color;"
+  "in vec4 color;\n"
+  "out vec4 FragColor;\n"
+  "void main(void)\n"
+  "{\n"
+  "FragColor = color;\n"
   "}";
-
-static GLuint prog;
-static GLuint vao;
 
 int main(int argc, char** argv)
 {
   printf("%s", "main()\n");
+
   glutInit(&argc, argv);
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_DEPTH | GLUT_RGB);
   glutInitWindowSize(800, 600);
 
-  glutCreateWindow("OpenGL Sample Drawing");
+  glutCreateWindow("OpenGL Sample Drawing with freeGLUT");
   glutReshapeFunc(Reshape);
   glutDisplayFunc(Display);
 
@@ -73,10 +81,10 @@ static void LinkProgram(GLuint id)
   {
     GLint len;
     glGetProgramiv(id, GL_INFO_LOG_LENGTH, &len);
-    char* message = (char*)malloc(len * sizeof(char));
+    char *message = new char();
     glGetProgramInfoLog(id, len, 0, message);
     Error(message);
-    free(message);
+    delete message;
   }
 }
 
@@ -90,10 +98,10 @@ static void CompileShader(GLuint id)
   {
     GLint len;
     glGetShaderiv(id, GL_INFO_LOG_LENGTH, &len);
-    char* message = (char*)malloc(len * sizeof(char));
+    char *message = new char();
     glGetShaderInfoLog(id, len, 0, message);
     Error(message);
-    free(message);
+    delete message;
   }
 }
 
@@ -149,6 +157,7 @@ static void Display()
 static void Init()
 {
   printf("%s", "Init()\n");
+
   // open GLEW
   GLenum err = glewInit();
   if (err != GLEW_OK)
